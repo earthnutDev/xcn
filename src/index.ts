@@ -1,6 +1,8 @@
-/**************************
+import { isFunction, isString } from 'a-type-of-js';
+
+/**
  * 参数的数据类型
- **************************/
+ */
 export type ClassNameItem =
   | null
   | number
@@ -8,14 +10,15 @@ export type ClassNameItem =
   | boolean
   | undefined
   | (() => string)
+  | (() => ClassNameItem[])
   | ClassNameItem[]
   | Record<string, boolean | undefined>;
 
-/**************************
+/**
  * 使用 infer 判断出当前的数据类型
  *
  * 字符串为具体的字符串值而非 string
- **************************/
+ */
 type TypeofClassNameItem<T> = T extends null | boolean | undefined
   ? ''
   : T extends readonly [unknown, infer U]
@@ -28,26 +31,25 @@ type TypeofClassNameItem<T> = T extends null | boolean | undefined
           ? string
           : T;
 
-/**************************
+/**
  * 递归判断当前返回的数据类型
- **************************/
-type MCN<T> = T extends [infer U, ...infer V] ? `${U & string}  ${MCN<V>}` : '';
+ */
+type XCN<T> = T extends [infer U, ...infer V] ? `${U & string}  ${XCN<V>}` : '';
 
-/**************************************
+/**
  *
  * 合并 class
  *
  * merge class name
  *
- **************************************/
-
-export function mcn<T extends ClassNameItem[]>(
+ */
+export function xcn<T extends ClassNameItem[]>(
   ...classNameList: T
-): MCN<{ [K in keyof T]: TypeofClassNameItem<T[K]> }> {
+): XCN<{ [K in keyof T]: TypeofClassNameItem<T[K]> }> {
   const template: string[] = [];
-  /**************************
+  /**
    * 移除空白
-   **************************/
+   */
   const removeBlank = (str: string) =>
     str
       .trim()
@@ -56,11 +58,11 @@ export function mcn<T extends ClassNameItem[]>(
       .split(' ')
       .sort()
       .join(' ');
-  /**************************
+  /**
    * 混合值
-   **************************/
-  const mergeNewValue = (newValue: string | undefined) => {
-    if (!newValue) return;
+   */
+  const mergeNewValue = (newValue?: string) => {
+    if (newValue === undefined || typeof newValue !== 'string') return;
     const newList = removeBlank(newValue).split(' ');
     if (newList.length) template.push(...newList);
   };
@@ -71,7 +73,7 @@ export function mcn<T extends ClassNameItem[]>(
     }
     // 数据为数组类型
     if (Array.isArray(classNameItem) === true) {
-      classNameItem.forEach(childItem => mergeNewValue(mcn(childItem)));
+      classNameItem.forEach(childItem => mergeNewValue(xcn(childItem)));
     }
     // 数据为 string 类型
     else if (
@@ -81,8 +83,13 @@ export function mcn<T extends ClassNameItem[]>(
       mergeNewValue(classNameItem.toString());
     }
     // 数据为函数类型
-    else if ('function' === typeof classNameItem) {
-      mergeNewValue(classNameItem());
+    else if (isFunction(classNameItem)) {
+      const result = classNameItem();
+      if (isString(result)) {
+        mergeNewValue(result);
+      } else {
+        result.forEach(item => mergeNewValue(xcn(item)));
+      }
     } else {
       // 数据为 object 类型
       for (const key in classNameItem) {
@@ -95,7 +102,7 @@ export function mcn<T extends ClassNameItem[]>(
   });
   const result = removeBlank(new Array(...new Set(template)).join(' '));
 
-  return (result || undefined) as unknown as MCN<{
+  return (result || undefined) as unknown as XCN<{
     [K in keyof T]: TypeofClassNameItem<T[K]>;
   }>;
 }
