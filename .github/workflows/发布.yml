@@ -1,18 +1,19 @@
 name: 发布到 npm
 on:
   push:
-    branches: [main]
-
+    branches: '*'
   workflow_dispatch: # 手动触发
     inputs:
       version:
         description: '触发原因（选填）'
         required: false
         default: '手动触发'
+        type: string
       ref:
-        description: '分支（选填）'
+        description: '发布的分支（选填）'
         required: false
         default: ''
+        type: string
 
 jobs:
   pub:
@@ -26,9 +27,9 @@ jobs:
       contents: write
       id-token: write
     # 复合条件判断（自动触发检查提交信息，手动触发直接放行）
-    # contains 函数
-    # startsWith 函数
-    # endsWith 函数
+    # startsWith(github.event.head_commit.message, 'version')
+    # contains(github.event.inputs.version, '手动触发')
+    # endsWith(github.event.head_commit.message, 'version')
     if: |
       (github.event_name == 'push' && startsWith(github.event.head_commit.message, 'version')) ||
       github.event_name == 'workflow_dispatch'
@@ -42,44 +43,12 @@ jobs:
       - name: 初始化 Node 并设定 Node 版本
         uses: actions/setup-node@v4
         with:
-          node-version: 20.x
+          node-version: 22.x
           registry-url: https://registry.npmjs.org
 
-      - name: 安装 dependencies 依赖
-        run: |
-          npm ci
-
-      - name: 构建
-        run: |
-          npm run build
-
-      - name: 提取版本号并解析 tag
-        id: extract-version
-        run: |
-          VERSION=$(node -p "require('./package.json').version")
-          echo "获取全称 npm version : $VERSION"
-
-          if [[ $VERSION =~ -([a-zA-Z0-9]+)(\.|$) ]]; then
-            TAG=${BASH_REMATCH[1]}
-            echo "捕获到 npm tag : $TAG"
-          else
-            TAG="latest"
-            echo "未捕获到 npm tag 设置了默认 : $TAG"
-          fi
-
-          echo "tag=${TAG}" >> $GITHUB_ENV # 输出 tag
-
-      - name: 发布到 npm xcn
+      - name: 发布到 npm
         env:
           NODE_AUTH_TOKEN: ${{secrets.NPM_TOKEN}}
         run: |
-          cd dist
-          npm publish --provenance --access public --tag ${{ env.tag }}
-
-      - name: 发布到 npm mix-cn
-        env:
-          NODE_AUTH_TOKEN: ${{secrets.NPM_TOKEN}}
-        run: |
-          node ./scripts/change-name.js
-          cd dist
-          npm publish --provenance --access public --tag ${{ env.tag }}
+          chmod +x ./scripts/pub.sh
+          ./scripts/pub.sh

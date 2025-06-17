@@ -4,9 +4,8 @@ import commonjs from '@rollup/plugin-commonjs';
 import json from '@rollup/plugin-json';
 import cleanup from 'rollup-plugin-cleanup';
 import copy from 'rollup-plugin-copy';
-
-/** 配置需要不打包进生产包的包名配置  */
-const excludedPkg = ['node:', 'tslib', 'a-', 'color-pen'];
+import { external } from '@qqi/rollup-external';
+import terser from '@rollup/plugin-terser';
 
 export default {
   input: './index.ts',
@@ -14,28 +13,29 @@ export default {
     {
       format: 'es',
       entryFileNames: '[name].mjs',
-      preserveModules: true,
+      preserveModules: false,
       sourcemap: false,
       exports: 'named',
-      dir: 'dist/mjs',
+      dir: 'dist',
     },
     {
       format: 'cjs',
       entryFileNames: '[name].cjs',
-      preserveModules: true,
+      preserveModules: false,
       sourcemap: false,
       exports: 'named',
-      dir: 'dist/cjs',
+      dir: 'dist',
     },
   ],
   // 配置需要排除的包
-  external: id => new RegExp('^'.concat(excludedPkg.join('|^'))).test(id),
+  external: external(),
   plugins: [
     resolve(),
     commonjs(),
     json(),
     typescript({}),
     cleanup(),
+    terser(),
     copy({
       targets: [
         { src: 'README.md', dest: 'dist' },

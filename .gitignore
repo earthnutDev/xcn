@@ -1,13 +1,11 @@
-node_modules/*
+node_modules
 
 */node_modules
 
 ## 打包文件
 
-list
-
 dist
 
-test/out
-
 .DS_Store
+
+.eg
