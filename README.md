@@ -30,4 +30,4 @@ import { xcn } from 'xcn';
 
 ## 文档地址
 
-参看 [https://earthnut.dev/xcn/](https://earthnut.dev/xcn/)
+参看 [https://earthnut.dev/npm/xcn/](https://earthnut.dev/npm/xcn/)

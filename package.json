@@ -1,14 +1,14 @@
 {
   "name": "xcn",
   "type": "module",
-  "version": "0.1.1",
+  "version": "0.1.2-alpha.0",
   "description": "一个用于字符串拼接的小工具，常用于 class name 的拼接",
   "scripts": {
     "b": "rollup --config rollup.config.js && tsc -p tsconfig.types.json",
-    "build": "jja rm dist && npm run b && npm run clean:package",
+    "build": "jja rm dist && pnpm run b && pnpm run clean:package",
     "clean:package": "node scripts/clean-package-json.js",
     "eslint": "jja cls && eslint src",
-    "beautify": "npm run prettier",
+    "beautify": "pnpm run prettier",
     "prettier": "jja cls && prettier . --write",
     "diff": "jja pkg -d=淘宝",
     "push:version": "gvv",
