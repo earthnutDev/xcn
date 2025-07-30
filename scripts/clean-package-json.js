@@ -48,7 +48,7 @@ packageJson = {
     node: '>=18.0.0',
   },
   keywords: ['xcn', 'mix-cn'],
-  homepage: 'https://earthnut.dev/xcn',
+  homepage: 'https://earthnut.dev/npm/xcn',
   bugs: {
     url: 'https://github.com/earthnutDev/xcn/issues',
     email: 'earthnut.dev@outlook.com',

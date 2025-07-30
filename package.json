@@ -1,7 +1,7 @@
 {
   "name": "xcn",
   "type": "module",
-  "version": "0.1.2-alpha.0",
+  "version": "0.1.2",
   "description": "一个用于字符串拼接的小工具，常用于 class name 的拼接",
   "scripts": {
     "b": "rollup --config rollup.config.js && tsc -p tsconfig.types.json",
@@ -25,34 +25,34 @@
     ]
   },
   "devDependencies": {
-    "@eslint/js": "^9.24.0",
-    "@qqi/rollup-external": "^1.0.6",
-    "@rollup/plugin-commonjs": "^28.0.3",
+    "@eslint/js": "^9.32.0",
+    "@qqi/rollup-external": "^1.0.9",
+    "@rollup/plugin-commonjs": "^28.0.6",
     "@rollup/plugin-json": "^6.1.0",
     "@rollup/plugin-node-resolve": "^16.0.1",
     "@rollup/plugin-terser": "^0.4.4",
-    "@rollup/plugin-typescript": "^12.1.2",
-    "@types/node": "^24.0.3",
-    "a-node-tools": "^4.2.9",
-    "eslint": "^9.24.0",
-    "eslint-config-prettier": "^10.1.2",
-    "eslint-plugin-jsdoc": "^51.0.1",
-    "globals": "^16.2.0",
-    "gvv": "^0.0.8",
+    "@rollup/plugin-typescript": "^12.1.4",
+    "@types/node": "^24.1.0",
+    "a-node-tools": "^4.2.19",
+    "eslint": "^9.32.0",
+    "eslint-config-prettier": "^10.1.8",
+    "eslint-plugin-jsdoc": "^52.0.1",
+    "globals": "^16.3.0",
+    "gvv": "^0.1.6",
     "husky": "^9.1.7",
-    "jja": "^2.3.8",
+    "jja": "^2.3.16",
     "lint-staged": "^16.1.2",
-    "pjj": "^1.0.1",
-    "prettier": "^3.5.3",
-    "rollup": "^4.40.0",
+    "pjj": "^1.0.4",
+    "prettier": "^3.6.2",
+    "rollup": "^4.46.2",
     "rollup-plugin-cleanup": "^3.2.1",
     "rollup-plugin-copy": "^3.5.0",
     "tslib": "^2.8.1",
     "typescript": "^5.8.3",
-    "typescript-eslint": "^8.29.1",
-    "vjj": "^1.0.5"
+    "typescript-eslint": "^8.38.0",
+    "vjj": "^1.0.10"
   },
   "dependencies": {
-    "a-type-of-js": "^1.0.2"
+    "a-type-of-js": "^1.0.7"
   }
 }
