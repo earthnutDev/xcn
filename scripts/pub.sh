@@ -12,10 +12,9 @@ install_check_version() {
 }
 
 tag=""
-# install_check_version
-printf $(pnpm dlx "${CHECK_VERSION}" -v)  # 更改全局安装的测试方法
 
-if ! tag=$(pnpm dlx "${CHECK_VERSION}" c=. 2>&1); then
+install_check_version # 安装全局的版本校验
+if ! tag=$(npx "${CHECK_VERSION}" c=. 2>&1); then
     echo "未通过版本校验：$tag"
     exit 0
 fi
@@ -38,24 +37,20 @@ fi
 # 确保脚本在遇见错误时立即退出
 set -e
 
-cd "dist"
-echo "开始发布 npm 包 ${tag} 版本"
-if ! pnpm publish --provenance --access public --tag "${tag}"  --no-git-checks; then
-    echo "发布失败" 
-    exit 1
-fi
-echo "🚀🚀  发布成功，完结 🎉🎉 撒花 🎉🎉"
+build () {
+    cd "dist"
+    echo "开始发布 npm 包 ${tag} 版本"
+    if ! pnpm publish --provenance --access public --tag "${tag}"   --no-git-checks; then
+        echo "发布失败" 
+        exit 1
+    fi
+    echo "🚀🚀  发布成功，完结 🎉🎉 撒花 🎉🎉"
+    
+    cd ../ 
+}
 
-
-cd ../ 
+build 
 
 node scripts/change-name.js
 
-
-cd "dist"
-echo "开始发布 npm 包 ${tag} 版本"
-if ! pnpm publish --provenance --access public --tag "${tag}"  --no-git-checks; then
-    echo "发布失败" 
-    exit 1
-fi
-echo "🚀🚀  发布成功，完结 🎉🎉 撒花 🎉🎉"
+build 
