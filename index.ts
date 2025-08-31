@@ -96,7 +96,9 @@ export function xcn<T extends EnClassNameItem[]>(
       }
     }
   });
-  const result = removeBlank(new Array(...new Set(template)).join(' '));
+  const result = removeBlank(
+    Array.from(new Set(template)).filter(Boolean).join(' '),
+  );
 
   return (result ?? undefined) as unknown as EnXcn<{
     [K in keyof T]: EnTypeofClassNameItem<T[K]>;
